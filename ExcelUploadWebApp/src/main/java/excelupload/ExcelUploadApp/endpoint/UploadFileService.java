@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -54,8 +55,9 @@ public class UploadFileService {
             //convert the uploaded file to inputstream
             InputStream is = inputPart.getBody(InputStream.class,null);
             InputStream is2 = inputPart.getBody(InputStream.class,null);
-            InputStreamReader ir = new InputStreamReader(is2, StandardCharsets.ISO_8859_1);
+            InputStreamReader ir = new InputStreamReader(is2);
             System.out.println("input stream encoding--->"+ir.getEncoding());
+            System.out.println("Default Charset ------>"+Charset.defaultCharset());
             BufferedReader r = new BufferedReader(ir);
 
             
@@ -73,7 +75,7 @@ public class UploadFileService {
 //            }
             
             java.nio.file.Path dst = Paths.get(fileName);
-            BufferedWriter bw = Files.newBufferedWriter(dst, StandardCharsets.ISO_8859_1);
+            BufferedWriter bw = Files.newBufferedWriter(dst, Charset.forName(ir.getEncoding()));
             PrintWriter printWriter = new PrintWriter(bw);
             IOUtils.copy(r, printWriter);
             printWriter.close();
